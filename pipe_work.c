@@ -14,7 +14,9 @@ int main(){
 		close(pipe_to_parent[WRITE]);
 		int input = 5;
 		write(pipe_to_child[WRITE],&input,sizeof(int));
-		printf("[parent] sending :%d\n",input);
+		printf("[parent] sending : %d\n",input);
+		read(pipe_to_parent[READ],&input,sizeof(int));
+		printf("[parent] receiving: %d\n",input);
 	}
 	else{
 		close(pipe_to_parent[READ]);
@@ -22,5 +24,8 @@ int main(){
 		int buffer;
 		read(pipe_to_child[READ],&buffer,sizeof(int));
 		printf("[child] doing maths on :%d\n",buffer);
+		buffer = buffer * 2;
+		write(pipe_to_parent[WRITE],&buffer,sizeof(int));
+		printf("[child] sending :%d\n",buffer);
 	}
 }
